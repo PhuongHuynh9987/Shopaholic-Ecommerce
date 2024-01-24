@@ -1,0 +1,130 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+
+<!DOCTYPE html>
+<%@page import="java.sql.*"%>
+<%@ page import="java.util.*"%>
+<%@ page import="shopaholicjava.*"%>
+<%@ page import="java.io.OutputStream"%>
+
+<html>
+<head>
+<meta charset="UTF-8">
+<!-- Favicon -->
+<link rel = "icon" type = "image/x-icon" href = "asset/favicon.ico"/>
+<!-- Font Awesome icons (free version) -->
+<script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" crossorigin = "anonymous"></script>
+<!--Google fonts  -->
+<link href = "https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type = text/css />
+<!-- Core theme CSS (bootstrap) -->	
+<link href = "style.css" rel="stylesheet"/>
+<meta charset="ISO-8859-1">
+<title>Merchant Main Page</title>
+</head>
+<body>
+	<div class='body'>
+		<div class='navbar'>
+			<div class='logo'>
+				<img src="images/logo.png" alt="logo">
+			</div>
+			<div class='searchbar'>
+				<input type="text" placeholder="Search..">
+			</div>
+			
+			<div class='signin'>
+				<a href="LogoutServlet"><button>Log Out</button></a>
+			</div>
+			
+			<div class='cart'>
+				<a href="LogoutServlet"><i class="fas fa-shopping-cart"></i></a>
+			</div>
+			
+		</div>
+		
+		<div class = 'product-area'>				
+			<%
+			
+			ArrayList<Product> merchantproducts = (ArrayList<Product>) request.getSession().getAttribute("merchantdata");
+			Iterator<Product> items = merchantproducts.iterator();
+
+			  while (items.hasNext()){
+				  Product item = items.next(); 
+				  System.out.println(item.getImg());
+			%>
+				<div class='product'>
+					<div class = product-top>
+						<img src = "<%=item.getImg()%>"/>
+				 
+						<h4><%=item.getProductName()%></h4> 
+					</div>
+					
+					<div class = product-bottom>
+						 <button class ="Edit" action ="EditMerchantServlet">Edit</button>
+						 
+						 <h3>$<%=item.getPrice()%></h3>
+					</div>
+				</div> 
+            
+							
+			<%}%> 
+		</div>	
+		
+		<form action="MerchantServlet" method="post">
+			<input type="hidden" name="action" value="addPage">
+			<button type="submit">Add Product</button>
+		</form>
+		<!-- <a href = "MerchantServlet" class = "signup-image-link">Add a New Product</a> -->
+			
+	</div>	
+		
+		
+	
+	<%-- <div align="center">
+		<h1>
+			Welcome,<%=request.getSession().getAttribute("MerchantName")%>!
+		</h1>
+
+		<h2>Your Products</h2>
+		<table border="1" width="500" align="center">
+			<tr>
+				<th>Product ID</th>
+				<th>Product Name</th>
+				<th>Product Type</th>
+				<th>Price</th>
+				<th>Delete</th>
+			</tr>
+			<%
+			ArrayList<Product> merchantproducts = (ArrayList<Product>) request.getSession().getAttribute("merchantdata");
+			for (Product p : merchantproducts) {
+			%>
+			<tr>
+				<td><%=p.getPID()%></td>
+				<td><%=p.getProductName()%></td>
+				<td><%=p.getProductType()%></td>
+				<td>$<%=p.getPrice()%></td>
+				<td><a href="DeleteMerchantProductServlet?PID=<%=p.getPID()%>">Delete</a>
+				</td>
+			</tr>
+			<%
+			}
+			%>
+		</table>
+
+		<h2>Add New Product</h2>
+		<form action="MerchantServlet" method="post">
+			<input type="hidden" name="action" value="add"> 
+			<label for="PID">PID</label> 
+			<input type="text" name="PID" required><br>
+			<label for="productName">Product Name</label> 
+			<input type="text" name="productName" required><br> 
+			<label for="ProductType">Product Type</label> 
+			<input type="text" name="ProductType" required><br> 
+			<label for="price">Price</label>
+			<input type="number" name="price" step="1" required><br>
+			<button type="submit">Add Product</button>
+		</form>
+		<h1></h1>
+		<a href="LoginServlet">Logout</a>
+	</div> --%>
+</body>
+</html>

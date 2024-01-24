@@ -1,0 +1,6 @@
+127.0.0.1 - - [24/Jan/2024:09:54:26 -0800] "GET / HTTP/1.1" 404 751
+0:0:0:0:0:0:0:1 - - [24/Jan/2024:09:54:27 -0800] "GET /Shopaholic/ HTTP/1.1" 200 2334
+0:0:0:0:0:0:0:1 - - [24/Jan/2024:09:54:27 -0800] "GET /Shopaholic/style.css HTTP/1.1" 304 -
+0:0:0:0:0:0:0:1 - - [24/Jan/2024:09:54:27 -0800] "GET /Shopaholic/images/signin-image.jpg HTTP/1.1" 304 -
+0:0:0:0:0:0:0:1 - - [24/Jan/2024:09:54:39 -0800] "POST /Shopaholic/LoginServlet HTTP/1.1" 200 -
+0:0:0:0:0:0:0:1 - - [24/Jan/2024:09:54:45 -0800] "POST /Shopaholic/LoginServlet HTTP/1.1" 200 -

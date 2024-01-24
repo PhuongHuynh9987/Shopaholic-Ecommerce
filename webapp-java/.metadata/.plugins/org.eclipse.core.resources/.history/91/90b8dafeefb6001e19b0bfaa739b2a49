@@ -1,0 +1,113 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html lang = "en"> 
+<head>
+<meta charset="ISO-8859-1">
+<meta name = "viewport" 
+	content = "width = device-width, initial-scale=1, shrink-to-fit=no" />
+<meta name="author" content = "" />
+
+<title>Welcome Page</title>
+<!-- Favicon -->
+<link rel = "icon" type = "image/x-icon" href = "asset/favicon.ico"/>
+<!-- Font Awesome icons (free version) -->
+<script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" crossorigin = "anonymous"></script>
+<!--Google fonts  -->
+<link href = "https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type = text/css />
+<!-- Core theme CSS (bootstrap) -->	
+<link href = "style.css" rel="stylesheet"/>
+</head>
+
+<body>
+	<div class="main">
+	
+		<!-- Sign in form -->
+		<section class = "sign-in">
+			<div class = "container">
+				<div class = "signin-content">
+					<div class = "signin-image">
+						<figure>
+							<img src = "images/signin-image.jpg" alt="sign up image">
+						</figure>
+						<a href = "createaccount.jsp" class = "signup-image-link">Create an account!</a>
+					</div>
+					
+					<div class="signin-form">
+						<h2 class = 'form-title'>Sign In</h2>
+						
+						<form method = "POST" action = "LoginServlet" class = "register-form" id = "login-form">
+								
+							<!-- Username -->
+							<div class ="form-group">
+								<label for="username">
+									<i class=""></i></label>
+									<input type="text" name="username" id="username"
+									placeholder = "username"/>
+							</div>
+							
+							<!-- Password -->
+							<div class ="form-group">
+								<label for="password">
+									<i class=""></i></label>
+									<input type="text" name="password" id="password"
+									placeholder = "password"/>
+							</div>
+							
+							<!-- User type -->
+							<div class ="form-group">
+								<select name="UserType">
+										<option value="User">User</option>
+										<option value="Merchant">Merchant</option>
+										<option value="Admin">Admin</option>
+								</select>
+							</div>
+					
+							
+							<!-- Submit button -->
+							<div class="form-group form-button">
+							
+								<input type="submit" name = 'signin' id="signin" class ="form-submit" value ="Login" />
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+	
+	
+<%-- 	
+
+		<h1>Welcome to Shopaholic! Please login below.</h1>
+		<form action="LoginServlet" method="POST">
+			<table style="with: 80%">
+				<tr>
+					<td>User Name</td>
+					<td><input type="text" name="UserName" /></td>
+				</tr>
+				<tr>
+					<td>UserPassword</td>
+					<td><input type="password" name="UserPassword" /></td>
+				</tr>
+				<tr>
+					<td>Select UserType</td>
+					<td><select name="UserType">
+							<option value="User">User</option>
+							<option value="Merchant">Merchant</option>
+							<option value="Admin">Admin</option>
+					</select></td>
+				</tr> 
+			</table>
+			<h1></h1>
+			<%
+			String UserName = (String) request.getAttribute("UserName");
+			request.getSession().setAttribute("UserName", UserName);
+			%>
+			<input type="submit" value="Login" />
+		</form>
+		<h1></h1>
+		<a href="createaccount.jsp">No account? Create an account!</a>
+	</div> --%>
+</body>
+</html>

@@ -1,0 +1,185 @@
+package servlets;
+import shopaholicjava.*;
+
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+//import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+/**
+ * Servlet implementation class LoginServlet
+ */
+//@WebServlet("/LoginServlet")
+
+public class LoginServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public LoginServlet() {
+		super();
+	} 
+
+	/**
+	 * @see HttpServlet#getPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		response.getWriter().append("Served at: ").append(request.getContextPath());
+		
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/login.jsp");
+		dispatcher.forward(request, response);
+
+	}
+	
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		//Retrieve login info
+//		String ID = request.getParameter("ID");
+//		String FirstName = request.getParameter("FirstName");
+//		String LastName = request.getParameter("LastName");
+		String UserName = request.getParameter("UserName");
+		String UserPassword = request.getParameter("password");
+		String UserType = request.getParameter("UserType");
+		
+		//Create new user/merchant/admin
+		User user = new User();
+		Cart cart = new Cart();
+		Merchant merchant = new Merchant();
+		Admin admin = new Admin();
+		
+		if(UserType.equals("User")) {
+//			user.setUID(ID);
+//			user.setFirstName(FirstName);
+//			user.setLastName(LastName);
+			user.setUserName(UserName);
+			user.setUserPassword(UserPassword);
+
+			
+		}
+		else if(UserType.equals("Merchant")) {
+//			merchant.setMID(ID);
+//			merchant.setFirstName(FirstName);
+//			merchant.setLastName(LastName);
+			merchant.setUserName(UserName);
+			merchant.setUserPassword(UserPassword);
+		}
+		else if(UserType.equals("Admin")) {
+//			admin.setAID(ID);
+//			admin.setFirstName(FirstName);
+//			admin.setLastName(LastName);
+			admin.setUserName(UserName);
+			admin.setUserPassword(UserPassword);
+		}
+		
+		
+		try (Connection con = DatabaseConnection.getConnection();
+				PreparedStatement userpst = con.prepareStatement("SELECT UID FROM MemberUsers WHERE UserName = ? AND UserPassword =?");
+				PreparedStatement merchantpst = con.prepareStatement("SELECT * FROM Merchants WHERE UserName = ? AND UserPassword =?");
+				PreparedStatement adminpst = con.prepareStatement("SELECT * FROM Admin WHERE UserName = ? AND UserPassword =?");
+				PreparedStatement cartpst = con.prepareStatement("SELECT CID FROM Cart WHERE UID = ?");) {
+			
+			ResultSet resultSet = null;
+		
+			if(UserType.equals("User")) {
+				userpst.setString(1, user.getUserName());
+				userpst.setString(2, user.getUserPassword());
+				
+				resultSet = userpst.executeQuery();	
+				
+			}
+			else if(UserType.equals("Merchant")) {
+//				merchantpst.setString(1, merchant.getMID());
+//				merchantpst.setString(2, merchant.getFirstName());
+//				merchantpst.setString(3, merchant.getLastName());
+				merchantpst.setString(1, merchant.getUserName());
+				merchantpst.setString(2, merchant.getUserPassword());
+				
+				resultSet = merchantpst.executeQuery();
+				
+				
+			}
+			else if(UserType.equals("Admin")) {
+//				adminpst.setString(1, admin.getAID());
+//				adminpst.setString(2, admin.getFirstName());
+//				adminpst.setString(3, admin.getLastName());
+				adminpst.setString(1, admin.getUserName());
+				adminpst.setString(2, admin.getUserPassword());
+				
+				resultSet = adminpst.executeQuery();
+			}
+//			System.out.println(resultSet.next());
+			//If user/merchant/admin matches the info in the database, then redirect to corresponding pages
+			if(resultSet.next()) {
+			
+				String UID = resultSet.getString("UID");
+				user.setUID(UID);
+	
+				System.out.println(user.getUID());
+				
+				ResultSet rs = null;
+				cartpst.setString(1, user.getUID());
+				rs = cartpst.executeQuery();
+				
+				while (rs.next() == true) {
+					String CID = rs.getString("CID");
+					cart.setCartId(CID);
+				}
+				
+				rs.close();
+				
+				RequestDispatcher dispatcher = null;
+				if(UserType.equals("User")) {
+					HttpSession session = request.getSession(true);
+					session.setAttribute("UID", user.getUID());
+					session.setAttribute("UserName", user.getUserName());
+					session.setAttribute("CID", cart.getCartId());
+					session.setAttribute("User", user);
+					
+					response.sendRedirect("UserServlet");
+					
+				}
+				else if(UserType.equals("Merchant")) {
+					HttpSession session = request.getSession(true);
+					session.setAttribute("MerchantName",  merchant.getUserName());
+//					session.setAttribute("MID", merchant.getMID());
+					response.sendRedirect("MerchantServlet");
+				}
+				else if(UserType.equals("Admin")) {
+					response.sendRedirect("AdminServlet");
+				}
+				resultSet.close();
+			}
+			//If user/merchant/admin does NOT match the info in the database, go to error page and try again
+			else {
+				RequestDispatcher dispatcher = null;
+				dispatcher = request.getRequestDispatcher("/WEB-INF/views/loginerror.jsp");
+				dispatcher.forward(request, response);
+				resultSet.close();
+			}	
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+}
