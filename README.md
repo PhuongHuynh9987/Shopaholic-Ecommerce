@@ -6,9 +6,9 @@ The original project report can be found at https://phuonghuynh9987.github.io/po
 
 
 
-### Project Demo
+## Project Demo
 
-### Getting started
+## Getting started
 
 #### 1. Download and Install
   - Eclipse IDE
