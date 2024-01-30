@@ -22,5 +22,6 @@ The original project report can be found at https://phuonghuynh9987.github.io/po
 
 #### 3. Steps:
   - Clone this repository
-  - Start Eclips
-  - Copy all files to the Java environment
+  - Start Eclipse and create a new project environment
+  - Copy all files to the environment
+  - In the MerchantServlet, adjust the file directory into your own images file directory for the uploaded photos to be written into
