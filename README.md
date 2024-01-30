@@ -5,4 +5,11 @@ This repository showcases continuous improvements made to a project originating 
 
 
 
+### Project Demo
+
+### Getting started
+
+#### 1. Set up
+
+Eclipse
 
