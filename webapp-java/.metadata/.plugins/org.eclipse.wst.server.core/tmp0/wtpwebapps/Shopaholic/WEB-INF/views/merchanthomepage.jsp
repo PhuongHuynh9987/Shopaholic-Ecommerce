@@ -31,9 +31,13 @@
 				<input type="text" placeholder="Search..">
 			</div>
 			
-			<div class='signin'>
-				<a href="LogoutServlet"><button>Log Out</button></a>
+			<div>
+				<form action="LogoutServlet">
+					<input type = "hidden" name = "UserType" value = "Merchant">
+					<button type="submit" class='signout'>Sign Out</button>
+				</form>
 			</div>
+			
 			<h3><%=session.getAttribute("MerchantName")%></h3>			
 		</div>
 		
@@ -43,8 +47,11 @@
 			ArrayList<Product> merchantproducts = (ArrayList<Product>) request.getSession().getAttribute("merchantdata");
 			Iterator<Product> items = merchantproducts.iterator();
 
+			
 			  while (items.hasNext()){
 				  Product item = items.next(); 
+				  Float price = item.getPrice();
+				  String Price = price.toString();
 			%>
 				<div class='product'>
 						<div class = product-top>
@@ -56,13 +63,10 @@
 						<div class = product-bottom>
 							 <form action="EditProductServlet" method="post">
 								<input type="hidden" name="action" value=<%=item.getPID()%>>
-								<button type="submit">Edit</button>
+								<button type="submit" class="addToCart">Edit</button>
 							</form>
-							<%-- <form action="EditProductServlet" method="post">
-								<input type="hidden" name="action" value=<%=item.getPID()%>>
-								<button type="submit">Delete</button>
-							</form> --%>
-							<h3>$<%=item.getPrice()%></h3>
+							
+							<h3>$<%=Price%></h3>
 						</div>
 				</div> 
             
@@ -70,60 +74,12 @@
 			<%}%> 
 		</div>	
 		
-		<form action="MerchantServlet" method="post">
+		 <form action="MerchantServlet" method="post">
 			<input type="hidden" name="action" value="addPage">
-			<button type="submit">Add Product</button>
-		</form>			
+			<button type="submit" class ="addProduct">Add Product</button>
+		</form>		 	
+		
 	</div>	
 		
-		
-	
-	<%-- <div align="center">
-		<h1>
-			Welcome,<%=request.getSession().getAttribute("MerchantName")%>!
-		</h1>
-
-		<h2>Your Products</h2>
-		<table border="1" width="500" align="center">
-			<tr>
-				<th>Product ID</th>
-				<th>Product Name</th>
-				<th>Product Type</th>
-				<th>Price</th>
-				<th>Delete</th>
-			</tr>
-			<%
-			ArrayList<Product> merchantproducts = (ArrayList<Product>) request.getSession().getAttribute("merchantdata");
-			for (Product p : merchantproducts) {
-			%>
-			<tr>
-				<td><%=p.getPID()%></td>
-				<td><%=p.getProductName()%></td>
-				<td><%=p.getProductType()%></td>
-				<td>$<%=p.getPrice()%></td>
-				<td><a href="DeleteMerchantProductServlet?PID=<%=p.getPID()%>">Delete</a>
-				</td>
-			</tr>
-			<%
-			}
-			%>
-		</table>
-
-		<h2>Add New Product</h2>
-		<form action="MerchantServlet" method="post">
-			<input type="hidden" name="action" value="add"> 
-			<label for="PID">PID</label> 
-			<input type="text" name="PID" required><br>
-			<label for="productName">Product Name</label> 
-			<input type="text" name="productName" required><br> 
-			<label for="ProductType">Product Type</label> 
-			<input type="text" name="ProductType" required><br> 
-			<label for="price">Price</label>
-			<input type="number" name="price" step="1" required><br>
-			<button type="submit">Add Product</button>
-		</form>
-		<h1></h1>
-		<a href="LoginServlet">Logout</a>
-	</div> --%>
 </body>
 </html>

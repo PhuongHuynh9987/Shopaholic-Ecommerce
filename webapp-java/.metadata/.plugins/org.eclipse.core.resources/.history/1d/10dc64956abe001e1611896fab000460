@@ -1,0 +1,148 @@
+
+
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html lang = "en"> 
+<head>
+<meta charset="ISO-8859-1">
+<meta name = "viewport" 
+	content = "width = device-width, initial-scale=1, shrink-to-fit=no" />
+<meta name="author" content = "" />
+
+<title>Welcome Page</title>
+<!-- Favicon -->
+<link rel = "icon" type = "image/x-icon" href = "asset/favicon.ico"/>
+<!-- Font Awesome icons (free version) -->
+<script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" crossorigin = "anonymous"></script>
+<!--Google fonts  -->
+<link href = "https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type = text/css />
+<!-- Core theme CSS (bootstrap) -->	
+<link href = "style.css" rel="stylesheet"/>
+</head>
+
+<body>
+<input type="hidden" id = "status" value = <%=request.getAttribute("status")%>>
+
+
+	<div class="main">
+		<div>
+			<a href = "merchantlogin.jsp">Seller Log In here</a>
+		</div>
+		
+		<!-- Sign in form -->
+		<section class = "sign-in">
+			<div class = "container">
+				<div class = "signin-content">
+					<div class = "signin-image">
+						<figure>
+							<img src = "images/signin-image.jpg" alt="sign in image">
+						</figure>						
+					</div>
+					
+					<div class="signin-form">
+						<h2 class = 'form-title'>Welcome Back!!</h2>
+						
+						<form method = "POST" action = "LoginServlet" class = "register-form" id = "login-form">
+							
+							<!-- Username -->
+							<div class = "form-group">
+								<label for="UserName">
+									<i class=""></i></label>
+									<input type="text" name="UserName" id="UserName"
+									placeholder = "Username"/>
+							</div>
+							
+							<% String UserName = (String) request.getAttribute("UserName");
+							   request.getSession().setAttribute("UserName", UserName); 
+							%>
+							
+							<!-- Password -->
+							<div class ="form-group">
+								<label for="password">
+									<i class=""></i></label>
+									<input type="password" name="password" id="password"
+									placeholder = "password"/>
+							</div>
+							
+							<!-- User type -->
+						 	<input type = "hidden" name="UserType" value = "User"> 
+							
+							
+							<!--  <div class ="form-group">
+								<select name="UserType">
+									<option value="User">User</option>
+									<option value="Merchant">Merchant</option>
+									<option value="Admin">Admin</option> 
+								</select>
+							</div>  -->
+							
+							
+							
+							<span class= "toast-msg" id='invalid-toast'>
+								<i class="fa fa-circle-exclamation"></i> 
+								Invalid username or password!
+							</span>
+							
+							<!-- Submit button -->
+						<div class="form-group form-button">
+							<input type="submit" name = 'signin' id="signin" class ="form-submit" value ="Sign In" />
+						</div>
+						</form>
+						
+						<a href = "createaccount.jsp" class = "signin-image-link">Create an account!</a>
+						
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+	
+<!-- 	<script src = "vendor/jquery/jquery.min.js"></script>
+	<script src = "js/main.js"></script>
+	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> -->
+<!-- 	<link rel="stylesheet" href = "alert.css">
+ -->
+ 	<script type="text/javascript">
+ 		var msg = document.querySelector(".toast-msg");
+ 		var status = document.getElementById("status").value;
+ 		
+
+		if (status == "failed"){
+			msg.classList.add("active");
+		}
+		else {
+		    console.log("success");
+		}
+ 		
+ 		
+ 		const UserName = document.getElementById("UserName");
+ 		console.log(UserName);
+		UserName.addEventListener("keydown", (event) => {
+ 		if (event.key === " ") {
+ 			msg.classList.remove("active"); 
+ 			console.log(UserName);
+ 		  }
+ 		});
+ 		 
+ 	</script>
+ 
+ 
+ 	<!-- <script type="text/javascript">
+ 		var status = document.getElementById("status").value;
+ 		if (status == "failed"){
+ 			swal("Wrong Username or Password", "failed");
+ 		}
+ 	</script> -->
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+</body>
+</html>

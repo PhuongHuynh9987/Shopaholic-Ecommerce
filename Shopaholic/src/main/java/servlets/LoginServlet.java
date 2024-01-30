@@ -37,7 +37,8 @@ public class LoginServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+//		response.getWriter().append("Served at: ").append(request.getContextPath());
+//		String UserType = request.getParameter("UserType");
 		
 		RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
 		dispatcher.forward(request, response);
@@ -79,7 +80,7 @@ public class LoginServlet extends HttpServlet {
 		
 		
 		try (Connection con = DatabaseConnection.getConnection();
-				PreparedStatement userpst = con.prepareStatement("SELECT UID FROM MemberUsers WHERE UserName = ? AND UserPassword =?");
+				PreparedStatement userpst = con.prepareStatement("SELECT UID,FirstName FROM MemberUsers WHERE UserName = ? AND UserPassword =?");
 				PreparedStatement merchantpst = con.prepareStatement("SELECT MID FROM Merchants WHERE UserName = ? AND UserPassword =?");
 				PreparedStatement adminpst = con.prepareStatement("SELECT * FROM Admin WHERE UserName = ? AND UserPassword =?");
 				PreparedStatement cartpst = con.prepareStatement("SELECT CID FROM Cart WHERE UID = ?");) {
@@ -108,16 +109,15 @@ public class LoginServlet extends HttpServlet {
 				
 				resultSet = adminpst.executeQuery();
 			}
-//			System.out.println(resultSet.next());
+
 			//If user/merchant/admin matches the info in the database, then redirect to corresponding pages
 			if(resultSet.next()) {
 				
-				RequestDispatcher dispatcher = null;
 				if(UserType.equals("User")) {
 					String UID = resultSet.getString("UID");
+					String FirstName = resultSet.getString("FirstName");
 					user.setUID(UID);
-		
-					System.out.println(user.getUID());
+					user.setFirstName(FirstName);
 					
 					ResultSet cr = null;
 					cartpst.setString(1, user.getUID());
@@ -132,9 +132,9 @@ public class LoginServlet extends HttpServlet {
 					HttpSession session = request.getSession(true);
 					session.setAttribute("UID", user.getUID());
 					session.setAttribute("UserName", user.getUserName());
+					session.setAttribute("FirstName", user.getFirstName());
 					session.setAttribute("CID", cart.getCartId());
 					session.setAttribute("User", user);
-					
 					response.sendRedirect("UserServlet");
 					
 				}
@@ -155,7 +155,16 @@ public class LoginServlet extends HttpServlet {
 			//If user/merchant/admin does NOT match the info in the database, go to error page and try again
 			else {
 				RequestDispatcher dispatcher = null;
-				dispatcher = request.getRequestDispatcher("/WEB-INF/views/loginerror.jsp");
+				
+				if (UserType.equals("Merchant")) {
+					request.setAttribute("status", "failed");
+					dispatcher = request.getRequestDispatcher("merchantlogin.jsp");
+				}
+				else {
+					request.setAttribute("status", "failed");
+					dispatcher = request.getRequestDispatcher("login.jsp");
+				}
+				
 				dispatcher.forward(request, response);
 				resultSet.close();
 			}	

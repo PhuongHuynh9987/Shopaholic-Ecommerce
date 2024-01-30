@@ -1,7 +1,9 @@
 package servlets;
 import shopaholicjava.*;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -12,6 +14,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 /**
  * Servlet implementation class EditProductServlet
@@ -30,41 +34,26 @@ public class EditProductServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/merchanthompage.jsp");
-		dispatcher.forward(request, response);
+	
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String action = request.getParameter("action");
-		String cancelButton = request.getParameter("Cancel");
-		
-		//If CANCEL button is clicked, go back to homepage
-        if ("Cancel".equals(cancelButton)) {
-        	this.cancel(request, response);
-        }
-        
-        if (action.equals("update")) {
-        	
-        }
-
-        else {
-        	editProduct(request, response);
-        }
-      
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { 
+		editProduct(request, response);
+ 
 	}
 	
 	protected void editProduct(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	  	String action = request.getParameter("action");
+	  	String PID = request.getParameter("action");
 
 		try (Connection con = DatabaseConnection.getConnection();){			
 			PreparedStatement query = con.prepareStatement("SELECT * FROM Products WHERE PID = ?;");
 			
 			ResultSet rs =null;
 			
-			query.setString(1,action);
+			query.setString(1,PID);
 			rs = query.executeQuery();	
 			
 			Product product = new Product();
@@ -73,50 +62,33 @@ public class EditProductServlet extends HttpServlet {
     			product.setProductName(ProductName);
     			String ProductType = rs.getString("ProductType");
     			product.setProductType(ProductType);
-    			String Price = rs.getString("Price");
+    			String price = rs.getString("Price");
+    			Float Price = Float.valueOf(price);
     			product.setPrice(Price);
     			String Img = rs.getString("Img");
     			product.setImg(Img);
-    			product.setPID(action);
+    			product.setPID(PID);
 			}
 			
-			request.setAttribute("PID", action);
+			HttpSession session = request.getSession(true);
+			
+			session.setAttribute("PID", PID);
+			request.setAttribute("PID", PID);	
 			request.setAttribute("ProductName", product.getProductName());
 			request.setAttribute("ProductType", product.getProductType());
 			request.setAttribute("Price", product.getPrice());
 			request.setAttribute("Img", product.getImg());
-			
 			rs.close();
 		}
 		
 		catch(Exception e) {
+			System.out.println(e);
 			e.printStackTrace();
 		}
 
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/editproduct.jsp");
 		dispatcher.forward(request, response);
 	}
-	protected void updateProduct(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		try (Connection con = DatabaseConnection.getConnection();){			
-			PreparedStatement query = con.prepareStatement("SELECT * FROM Products WHERE PID = ?;");
-			String ProductType = request.getParameter("productType");
-			String Price = request.getParameter("price");
-			System.out.println(Price);
-			
-		}
-		
-		catch(Exception e) {
-			e.printStackTrace();
-		}
 
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/editproduct.jsp");
-		dispatcher.forward(request, response);
-	
-	
-//		PreparedStatement pst = con.prepareStatement("UPDATE Products SET ProductName = ?, Price = ? WHERE PID = ?;");
-	}
 
-	protected void cancel(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.sendRedirect("AdminServlet");
-	}
 }

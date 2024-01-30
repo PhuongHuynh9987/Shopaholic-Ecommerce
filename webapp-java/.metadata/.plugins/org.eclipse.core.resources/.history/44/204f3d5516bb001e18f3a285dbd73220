@@ -1,0 +1,118 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<%@page import="java.sql.*"%>
+<%@ page import="java.util.*"%>
+<%@ page import="shopaholicjava.*"%>
+
+<head>
+<meta charset="UTF-8">
+<!-- Favicon -->
+<link rel = "icon" type = "image/x-icon" href = "asset/favicon.ico"/>
+<!-- Font Awesome icons (free version) -->
+<script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" crossorigin = "anonymous"></script>
+<!--Google fonts  -->
+<link href = "https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type = text/css />
+<!-- Core theme CSS (bootstrap) -->	
+<link href = "style.css" rel="stylesheet"/>
+<meta charset="ISO-8859-1">
+<title>User Home Page</title>
+</head>
+<body>
+	<div class='body'>
+		<div class='navbar'>
+			<div class='logo'>
+				<img src="images/logo.png" alt="logo">
+			</div>
+			<div class='searchbar'>
+				<input type="text" placeholder="Search..">
+			</div>
+			
+			<div class='signin'>
+				<a href="LogoutServlet"><button>Log Out</button></a>
+			</div>
+			
+			<div class='cart'>
+ 			<form action="AddToCartServlet" method="post"> 
+			<%	String CID = (String) request.getSession().getAttribute("CID");
+			
+			%>
+				<input type="hidden" name="action" value=<%=CID%>>
+				<a href = "cart.jsp" type="submit" ><i class="fas fa-shopping-cart"></i></a>
+ 			</form>	 
+			</div>
+			<h3><%=session.getAttribute("UserName")%></h3>
+			
+		</div>
+		
+		<div class = 'product-area'>				
+			<%ArrayList<Product> products = (ArrayList<Product>) request.getAttribute("productdata");
+			  Iterator<Product> items = products.iterator();
+			  
+			  while (items.hasNext()){
+				  Product item = items.next();
+			%>
+				<div class='product'>
+					<div class = product-top>
+						<img alt="" src= "<%=item.getImg()%>" >
+						 <h4><%=item.getProductName()%></h4>
+					</div>
+					
+					<div class = product-bottom>
+						<div>
+							<form action="AddToCartServlet" method="post">
+								<input type="hidden" name="AddToCart" value= "AddToCart">
+								<button type="submit" name="add" value = <%=item.getPID()%> >Add to Cart</button>
+							</form>
+							<%-- 
+							 <form action="" method="post">
+							 	<input type="hidden" name="action" value=<%=item.getPID()%>> 
+								<button type="submit">View</button>
+							</form>  --%>
+		
+						</div>
+						 <h3>$<%=item.getPrice()%></h3>
+					</div>
+				</div> 
+			<%}%>
+			</div>		
+					
+	
+		<%-- <div align=center>
+			<h1>Welcome, <%=request.getAttribute("UserName")%> to Shopaholic Home Page!</h1>
+			<h2>Products Available</h2>
+			<table border="1" width="500" align="center">
+				<th>Product ID</th>
+				<th>Product Name</th>
+				<th>ProductType</th>
+				<th>Price</th>
+				<th>Add</th>
+
+				<%
+			ArrayList<Product> products = (ArrayList<Product>) request.getAttribute("productdata");
+				for (Product p: products) {
+			%>
+				<tr>
+					<td><%=p.getPID()%></td>
+					<td><%=p.getProductName()%></td>
+					<td><%=p.getProductType()%></td>
+					<td>$<%=p.getPrice()%></td>
+					<td><a
+						href="AddToCartServlet?pid=<%=p.getPID()%>&productname=<%=p.getProductName()%>&price=<%=p.getPrice()%>">Add</a></td>
+
+				</tr>
+				<% 
+			}%>
+			</table>
+			<h3>
+				<a href="ReviewServlet">Go to Reviews</a>
+			</h3>
+			<h3>
+				<a href="EditCartServlet">Go to Cart</a>
+			</h3>
+		</div> --%>
+		
+	</div>
+</body>
+</html>

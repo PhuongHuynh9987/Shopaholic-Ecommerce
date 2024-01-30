@@ -105,7 +105,8 @@ public class AdminServlet extends HttpServlet {
 				Product product = new Product();
 				String PID = resultSet.getString("PID");
 				String ProductName = resultSet.getString("ProductName");
-				String Price = resultSet.getString("Price");
+				String price = resultSet.getString("Price");
+				Float Price = Float.valueOf(price);
 				String ProductType = resultSet.getString("ProductType");
 				product.setPID(PID);
 				product.setProductName(ProductName);

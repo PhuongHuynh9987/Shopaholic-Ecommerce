@@ -21,6 +21,8 @@
 </head>
 <body>
 	<div class='body'>
+	
+		<!------------ Nav Bar ------------>
 		<div class='navbar'>
 			<div class='logo'>
 				<img src="images/logo.png" alt="logo">
@@ -29,77 +31,67 @@
 				<input type="text" placeholder="Search..">
 			</div>
 			
-			<div class='signin'>
-				<a href="LogoutServlet"><button>Log Out</button></a>
+			<div>
+				<form action="LogoutServlet">
+					<input type = "hidden" name = "UserType" value = "User">
+					<button type="submit" class='signout'>Sign Out</button>
+				</form>
 			</div>
 			
-			<div class='cart'>
-				<a href="LogoutServlet"><i class="fas fa-shopping-cart"></i></a>
-				 
+			<div >
+	 			<form action="EditCartServlet" method="post"> 
+				<%	String CID = (String) request.getSession().getAttribute("CID");
+				
+				%>
+					<input type="hidden" name="action" value=<%=CID%> >
+					<button type="submit" class='cart' ><i class="fas fa-shopping-cart"></i></button>
+				</form>	  
 			</div>
-			<h3><%=session.getAttribute("UserName")%></h3>
-			
+			<h3><%=session.getAttribute("FirstName")%></h3>
 		</div>
 		
+		
+		<!--------- Main Content --------->
 		<div class = 'product-area'>				
 			<%ArrayList<Product> products = (ArrayList<Product>) request.getAttribute("productdata");
 			  Iterator<Product> items = products.iterator();
 			  
 			  while (items.hasNext()){
-				  Product item = items.next();
-				  System.out.println(item.getImg());
-			%>
+				  Product item = items.next(); 
+				  Float price = item.getPrice();
+				  String Price = price.toString();
+				  
+				  %>
+				  
 				<div class='product'>
 					<div class = product-top>
-						<img alt="" src= <%=item.getImg()%>>
+						<img alt="" src= "<%=item.getImg()%>" >
 						 <h4><%=item.getProductName()%></h4>
 					</div>
-					
+					<hr>
 					<div class = product-bottom>
-						<div>
-							<button>Add to Cart</button>
-							<button>View</button>
+						<div class = "buttons">
+							<form action="AddToCartServlet" method="post">
+								<input type="hidden" name="action" value= "AddToCart">
+								<button type="submit" name="add" value = <%=item.getPID()%> class="addToCart">Add to Cart</button>
+							</form>
+							
+							 <form action="UserServlet" method="post">
+							 	<input type="hidden" name="action" value=<%=item.getPID()%>> 
+								<button type="submit" class="viewItem">View</button>
+							</form>  
+		
 						</div>
-						 <h3>$<%=item.getPrice()%></h3>
+						 <h3>$<%=Price%></h3>
 					</div>
 				</div> 
 			<%}%>
 			</div>		
 					
 	
-		<%-- <div align=center>
-			<h1>Welcome, <%=request.getAttribute("UserName")%> to Shopaholic Home Page!</h1>
-			<h2>Products Available</h2>
-			<table border="1" width="500" align="center">
-				<th>Product ID</th>
-				<th>Product Name</th>
-				<th>ProductType</th>
-				<th>Price</th>
-				<th>Add</th>
-
-				<%
-			ArrayList<Product> products = (ArrayList<Product>) request.getAttribute("productdata");
-				for (Product p: products) {
-			%>
-				<tr>
-					<td><%=p.getPID()%></td>
-					<td><%=p.getProductName()%></td>
-					<td><%=p.getProductType()%></td>
-					<td>$<%=p.getPrice()%></td>
-					<td><a
-						href="AddToCartServlet?pid=<%=p.getPID()%>&productname=<%=p.getProductName()%>&price=<%=p.getPrice()%>">Add</a></td>
-
-				</tr>
-				<% 
-			}%>
-			</table>
-			<h3>
+	<!-- 		<h3>
 				<a href="ReviewServlet">Go to Reviews</a>
-			</h3>
-			<h3>
-				<a href="EditCartServlet">Go to Cart</a>
-			</h3>
-		</div> --%>
+			</h3>  -->
 		
 	</div>
 </body>

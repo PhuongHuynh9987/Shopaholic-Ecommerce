@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -32,14 +33,210 @@ public class UserServlet extends HttpServlet {
     }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.getSession().getAttribute("UID");
-		String UID = (String) request.getSession(false).getAttribute("UID");
-		String UserName = (String) request.getSession(false).getAttribute("UserName");
-		String CID = (String) request.getSession(false).getAttribute("CID");
+		viewAllProduct(request, response);
+	}
+	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String action = request.getParameter("action");
 		
+		
+		if(action.equals("addReview")) {
+			addReview(request,response);
+		}
+		else if(action.equals("review")) {
+			addingReview(request,response);
+		}
+	
+		else {
+			viewAproduct(request,response);
+		}
+	}
+	
+	private void addingReview(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String PID = request.getParameter("PID");
+		String description = request.getParameter("description");
+		String UserName = (String) request.getAttribute("UserName");
+		String ProductName = (String) request.getAttribute("ProductName");
+		
+		String query = "Insert Into Reviews "
+				+ "(PID,Author,ProductName, ReviewDescription) values (?,?,?,?)";
+		
+		try (Connection con = DatabaseConnection.getConnection();
+				PreparedStatement insert = con.prepareStatement(query);
+				PreparedStatement getReviewId = 
+						con.prepareStatement("Select RID WHERE (PID = ? AND Author = ? AND ProductName = ? AND ReviewDescription = ?); ");){
+				
+				insert.setString(1, PID);
+				insert.setString(2, UserName);
+				insert.setString(3, ProductName);
+				insert.setString(4, description);
+					
+				insert.executeUpdate();		
+				
+				ResultSet rs = null;
+				Review review = new Review();
+				
+				getReviewId.setString(1, PID);
+				getReviewId.setString(2, UserName);
+				getReviewId.setString(3, ProductName);
+				getReviewId.setString(4, description);
+				
+				rs = getReviewId.executeQuery();
+				
+				
+				while(rs.next()) {
+					String RID = rs.getString("RID");
+					rs.setRID(RID);
+					
+						
+				} 
+
+//				request.setAttribute("RID",PID);
+//				request.setAttribute("ProductName",product.getProductName());			
+//				request.setAttribute("ProductType", product.getProductType());
+//				request.setAttribute("price", product.getPrice());
+//				request.setAttribute("Img", product.getImg());
+//				request.setAttribute("product", product);
+				
+				
+				RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/review.jsp");
+			    rd.forward(request, response);
+  
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void addReview(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {	
+		String PID = request.getParameter("PID");
+	
+		try (Connection con = DatabaseConnection.getConnection();
+			PreparedStatement s = con.prepareStatement("SELECT * FROM Products where PID = ?");){
+			
+			s.setString(1, PID);
+			ResultSet resultSet = s.executeQuery();
+			Product product = new Product();
+			
+			while(resultSet.next()) {
+
+				String ProductName = resultSet.getString("ProductName");
+				String price = resultSet.getString("Price");
+				Float Price = Float.valueOf(price);
+				String ProductType = resultSet.getString("ProductType");
+				String Img = resultSet.getString("Img");
+				
+				product.setPID(PID);
+				product.setProductName(ProductName);
+				product.setProductType(ProductType);
+				product.setPrice(Price);
+				product.setImg(Img);
+					
+			} 
+
+			request.setAttribute("PID",PID);
+			request.setAttribute("ProductName",product.getProductName());			
+			request.setAttribute("ProductType", product.getProductType());
+			request.setAttribute("price", product.getPrice());
+			request.setAttribute("Img", product.getImg());
+			request.setAttribute("product", product);
+			
+			
+			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/review.jsp");
+		    rd.forward(request, response);
+		    
+//		String RID = request.getParameter("RID");
+//      	String PID = request.getParameter("PID");
+//      	String Author = request.getParameter("Author");
+//        String ProductName = request.getParameter("ProductName");
+//        String Description = request.getParameter("Description");
+//        String Star = request.getParameter("Star");
+//
+//        try (Connection con = DatabaseConnection.getConnection();) {
+//            // Insert the new product into the Products table
+//            String insertQuery = "INSERT INTO Reviews (RID, PID, Author, ProductName, ReviewDescription, Stars) VALUES (?, ?, ?, ?, ?, ?)";
+//            try (PreparedStatement insertStatement = con.prepareStatement(insertQuery)) {
+//            	insertStatement.setString(1, RID);
+//                insertStatement.setString(2, PID);
+//                insertStatement.setString(3, Author);
+//                insertStatement.setString(4, ProductName);
+//                insertStatement.setString(5, Description);
+//                insertStatement.setString(6, Star);
+//                insertStatement.executeUpdate();
+//
+//                // Get the auto-generated product ID
+////                ResultSet generatedKeys = insertStatement.getGeneratedKeys();
+////                int productId = -1;
+////                if (generatedKeys.next()) {
+////                    productId = generatedKeys.getInt(1);
+////                }
+//            }
+//            catch (SQLException e) {
+//            	RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/addreviewerror.jsp");
+//    			dispatcher.forward(request, response);
+//            }
+//		
+//		response.sendRedirect("ReviewServlet");
+//        } 
+//        catch (SQLException e) {
+//        	RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/addreviewerror.jsp");
+//			dispatcher.forward(request, response);
+//        }
+	
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void viewAproduct(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String PID = request.getParameter("action");
+		
+		try (Connection con = DatabaseConnection.getConnection();
+				PreparedStatement s = con.prepareStatement("SELECT * FROM Products where PID = ?");){
+			
+			s.setString(1, PID);
+			ResultSet resultSet = s.executeQuery();
+			Product product = new Product();
+			
+			while(resultSet.next()) {
+
+				String ProductName = resultSet.getString("ProductName");
+				String price = resultSet.getString("Price");
+				Float Price = Float.valueOf(price);
+				String ProductType = resultSet.getString("ProductType");
+				String Img = resultSet.getString("Img");
+				
+				product.setPID(PID);
+				product.setProductName(ProductName);
+				product.setProductType(ProductType);
+				product.setPrice(Price);
+				product.setImg(Img);
+					
+			} 
+
+			request.setAttribute("PID",PID);
+			request.setAttribute("ProductName",product.getProductName());			
+			request.setAttribute("ProductType", product.getProductType());
+			request.setAttribute("price", product.getPrice());
+			request.setAttribute("Img", product.getImg());
+			request.setAttribute("product", product);
+			
+			
+			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/viewproductinfo.jsp");
+		    rd.forward(request, response);
+			
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void viewAllProduct(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String UID = (String) request.getSession().getAttribute("UID");
+		String UserName = (String) request.getSession().getAttribute("UserName");
+		String CID = (String) request.getSession().getAttribute("CID");
 		
 		try {
 			ArrayList<Product> products = new ArrayList<Product>();
@@ -55,7 +252,8 @@ public class UserServlet extends HttpServlet {
 					Product product = new Product();
 					String PID = resultSet.getString("PID");
 					String ProductName = resultSet.getString("ProductName");
-					String Price = resultSet.getString("Price");
+					String price = resultSet.getString("Price");
+					Float Price = Float.valueOf(price);
 					String ProductType = resultSet.getString("ProductType");
 					String Img = resultSet.getString("Img");
 					
@@ -80,13 +278,8 @@ public class UserServlet extends HttpServlet {
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 	}
+
 
 }

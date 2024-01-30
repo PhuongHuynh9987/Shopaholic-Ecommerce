@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="ISO-8859-1">
+
 <meta name = "viewport" 
 	content = "width = device-width, initial-scale=1, shrink-to-fit=no" />
 <meta name="author" content = "" />
@@ -27,14 +27,15 @@
 					<div class="signup-form">
 						<h2 class = 'form-title'>Sign Up</h2>
 					
-						<form method = "POST" action = "SignUpServlet" class = "register-form" id = "signup-form">
+						<form method = "POST" action = "SignUpServlet" 
+							class = "register-form" id = "signup-form" onsubmit="return validateForm()">
 								
 							<!-- First Name -->
 							<div class ="form-group">
 								<label for="FirstName">
 									<i class=""></i></label>
 									<input type="text" name="FirstName" id="FirstName"
-									placeholder = "FirstName"/>
+									placeholder = "FirstName" onkeypress="removeElert()"/>
 							</div>
 							
 							<!-- Last Name -->
@@ -42,7 +43,7 @@
 								<label for="LastName">
 									<i class=""></i></label>
 									<input type="text" name="LastName" id="LastName"
-									placeholder = "LastName"/>
+									placeholder = "LastName" onkeypress="removeElert()"/>
 							</div>
 							
 							<!-- User Name -->
@@ -50,19 +51,19 @@
 								<label for="UserName">
 									<i class=""></i></label>
 									<input type="text" name="UserName" id="UserName"
-									placeholder = "Username"/>
+									placeholder = "Username" onkeypress="removeElert()" />
 							</div>
 							
-							<% String UserName = (String) request.getAttribute("UserName");
+					<%-- 		<% String UserName = (String) request.getAttribute("UserName");
 							   request.getSession().setAttribute("UserName", UserName); 
 							%>
-							
+							 --%>
 							<!-- Email -->
 							<div class ="form-group">
 								<label for="email">
 									<i class=""></i></label>
 									<input type="email" name="email" id="email"
-									placeholder = "email"/>
+									placeholder = "email" onkeypress="removeElert()"/>
 							</div>
 							
 							<!-- Password -->
@@ -70,8 +71,10 @@
 								<label for="password">
 									<i class=""></i></label>
 									<input type="password" name="password" id="password"
-									placeholder = "password"/>
+									placeholder = "password" onkeypress="removeElert()"/>
 							</div>
+							
+							<span class="emptyField">Please Fill In All Required Fields!</span>
 							
 							<!-- User type -->
 							<div class ="form-group">
@@ -81,60 +84,55 @@
 										<option value="Admin">Admin</option>
 								</select>
 							</div>
-					
+							
+					 		
+					 
 							
 							<!-- Submit button -->
 							<div class="form-group form-button">
 								<input type="submit" name = 'signin' id="signin" class ="form-submit" value ="Sign Up" />
 							</div>
+							
 						</form>
+					<a href = "login.jsp" class = "signup-image-link">Already a member? Log In</a>
+						
 					</div>
 					<div class = "signup-image">
 						<figure>
 							<img src = "images/signup-image.jpg" alt="sign up image">
-						</figure>
-						<a href = "login.jsp" class = "signup-image-link">Already a member? Log In</a>
-					
+						</figure>					
 					</div>
 				</div>
 			</div>
 		</section>
 	</div>
+	
+	<script  type="text/javascript">
+	 	var emptyField = document.querySelector(".emptyField");
+	 	
+		function validateForm() {
+			var a = document.getElementById("FirstName").value;
+			var b = document.getElementById("LastName").value;
+			var c = document.getElementById("email").value;
+			var d = document.getElementById("password").value;
+			var e = document.getElementById("UserName").value;
+		   
+		    
+		    if ((a == null || a == "") || (b == null || b == "") || 
+		    		(c == null || c == "") || (d == null || d == "") || (e == null || e == "")) {
+		    	emptyField.classList.add("active");	
+		    	
+		    	return false;
+		    }
+		    else {
+		    	return true;
+		    }
+		 }
 		
-	<!-- <div align="center">
-		<h1>Please enter your info below to create an account.</h1>
-		<form action="SignUpServlet" method="POST">
-			<table style="with: 80%">
-				<tr>
-					<td>ID</td>
-					<td><input type="text" name="ID" /></td>
-				</tr>
-				<tr>
-					<td>First Name</td>
-					<td><input type="text" name="FirstName" /></td>
-				</tr>
-				<tr>
-					<td>Last Name</td>
-					<td><input type="text" name="LastName" /></td>
-				</tr>
-				<tr>
-					<td>User Name</td>
-					<td><input type="text" name="UserName" /></td>
-				</tr>
-				<tr>
-					<td>UserPassword</td>
-					<td><input type="password" name="UserPassword" /></td>
-				</tr>
-				<tr>
-					<td>Select UserType</td>
-					<td><select name="UserType">
-							<option value="User">User</option>
-							<option value="Merchant">Merchant</option>
-					</select>
-			</table>
-			<h1></h1>
-			<input type="submit" value="Create"/>
-		</form>
-	</div> -->
+		 function removeElert() {
+			emptyField.classList.remove("active");	
+		 }
+		
+	</script>
 </body>
 </html>

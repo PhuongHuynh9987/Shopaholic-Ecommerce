@@ -22,7 +22,10 @@
 </head>
 
 <body>
-	<div class="main">
+<input type="hidden" id = "status" value = <%=request.getAttribute("status")%>>
+
+
+	<div class="main">		
 		<!-- Sign in form -->
 		<section class = "sign-in">
 			<div class = "container">
@@ -30,22 +33,20 @@
 					<div class = "signin-image">
 						<figure>
 							<img src = "images/signin-image.jpg" alt="sign in image">
-						</figure>
-						<a href = "createaccount.jsp" class = "signin-image-link">Create an account!</a>
-						
+						</figure>						
 					</div>
 					
 					<div class="signin-form">
-						<h2 class = 'form-title'>Sign In</h2>
+						<h2 class = 'form-title'>Welcome Back!!</h2>
 						
 						<form method = "POST" action = "LoginServlet" class = "register-form" id = "login-form">
-								
+							
 							<!-- Username -->
-							<div class ="form-group">
-								<label for="username">
+							<div class = "form-group">
+								<label for="UserName">
 									<i class=""></i></label>
 									<input type="text" name="UserName" id="UserName"
-									placeholder = "Username"/>
+									placeholder = "Username" onkeypress="removeElert()"/>
 							</div>
 							
 							<% String UserName = (String) request.getAttribute("UserName");
@@ -61,61 +62,78 @@
 							</div>
 							
 							<!-- User type -->
-							<div class ="form-group">
-								<select name="UserType">
-										<option value="User">User</option>
-										<option value="Merchant">Merchant</option>
-										<option value="Admin">Admin</option>
-								</select>
-							</div>
-					
+						 	<input type = "hidden" name="UserType" value = "User"> 
 							
+							<span class= "toast-msg" id='invalid-toast'>
+								<i class="fa fa-circle-exclamation"></i> 
+								Invalid username or password!
+							</span>
 							
 							<!-- Submit button -->
-							<div class="form-group form-button">
-								<input type="submit" name = 'signin' id="signin" class ="form-submit" value ="Log In" />
-							</div>
+						<div class="form-group form-button">
+							<input type="submit" name = 'signin' id="signin" class ="form-submit" value ="Sign In" />
+						</div>
 						</form>
+						
+						<a href = "createaccount.jsp" class = "signin-image-link">Create an account!</a>
+						
 					</div>
 				</div>
+				<div>
+					<a href = "merchantlogin.jsp">Seller Log In here</a>
+				</div>
 			</div>
+			
 		</section>
-		
-		
 	</div>
 	
+<!-- 	<script src = "vendor/jquery/jquery.min.js"></script>
+	<script src = "js/main.js"></script>
+	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> -->
+<!-- 	<link rel="stylesheet" href = "alert.css">
+ -->
+ 	<script type="text/javascript">
+ 		var msg = document.querySelector(".toast-msg");
+ 		var status = document.getElementById("status").value;
+ 		
+ 		function removeElert(){
+ 			msg.classList.remove("active");
+ 		}
+ 		
+		if (status == "failed"){
+			msg.classList.add("active");
+		}
+		else {
+		    console.log("success");
+		}
+ 		
+ 		
+ 	/* 	
+		UserName.addEventListener("onkeypress", (event) => {
+	 		if (event.key === " ") {
+	 			msg.classList.remove("active"); 
+	 			console.log(UserName);
+	 		  }
+	 		});
+ 		  */
+ 	</script>
+ 
+ 
+ 	<!-- <script type="text/javascript">
+ 		var status = document.getElementById("status").value;
+ 		if (status == "failed"){
+ 			swal("Wrong Username or Password", "failed");
+ 		}
+ 	</script> -->
 	
-<%-- 	
-
-		<h1>Welcome to Shopaholic! Please login below.</h1>
-		<form action="LoginServlet" method="POST">
-			<table style="with: 80%">
-				<tr>
-					<td>User Name</td>
-					<td><input type="text" name="UserName" /></td>
-				</tr>
-				<tr>
-					<td>UserPassword</td>
-					<td><input type="password" name="UserPassword" /></td>
-				</tr>
-				<tr>
-					<td>Select UserType</td>
-					<td><select name="UserType">
-							<option value="User">User</option>
-							<option value="Merchant">Merchant</option>
-							<option value="Admin">Admin</option>
-					</select></td>
-				</tr> 
-			</table>
-			<h1></h1>
-			<%
-			String UserName = (String) request.getAttribute("UserName");
-			request.getSession().setAttribute("UserName", UserName);
-			%>
-			<input type="submit" value="Login" />
-		</form>
-		<h1></h1>
-		<a href="createaccount.jsp">No account? Create an account!</a>
-	</div> --%>
+	
+	
+	
+	
+	
+	
+	
+	
+	
 </body>
 </html>

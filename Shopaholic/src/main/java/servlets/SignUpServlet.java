@@ -108,38 +108,45 @@ public class SignUpServlet extends HttpServlet {
 				else {
 					//Check for duplicate user account information
 					try {		
+
 						// Get and set user ID
 						resultSet = userpst.executeUpdate();  //this will excute the insertion query first
 		
-						ResultSet rs = null;        		 //then we will have the information to update cart
+						ResultSet rs_uid = null;        		 //then we will have the information to update cart
 						uid.setString(1, user.getUserName());
 						uid.setString(2, user.getUserEmail());
-						rs = uid.executeQuery();
-						while (rs.next()) {
-							String UID = rs.getString("UID");
+						
+						rs_uid = uid.executeQuery();
+						while (rs_uid.next()) {
+							String UID = rs_uid.getString("UID");
 							user.setUID(UID);
 						}
-
-						rs.close();
-						// get and set card ID
-						cartpst.setString(1, user.getUID().toString());
-						cartpst.executeUpdate();
 						
-						ResultSet r = null;        		 //then we will have the information to update cart
+						rs_uid.close();
+						
+						// create a cart for the user
+						int rs_cart = 0; 
+						cartpst.setString(1, user.getUID());
+						rs_cart = cartpst.executeUpdate();
+
+//						// get and set card ID
+						ResultSet cartID = null;        		 //then we will have the information to update cart
 						cid.setString(1, user.getUID());
-						r = cid.executeQuery();
-						System.out.println(r.next());
-						while (r.next() == true) {
-							String CID = rs.getString("CID");
+						
+						cartID = cid.executeQuery();
+
+						while (cartID.next() == true) {
+							String CID = cartID.getString("CID");
 							cart.setCartId(CID);
 						}
+						cartID.close();						
 						
-						r.close();
-							
 						HttpSession session = request.getSession(true);
 						session.setAttribute("UID", user.getUID());
 						session.setAttribute("UserName", user.getUserName());
+						session.setAttribute("FirstName", user.getFirstName());
 						session.setAttribute("CID", cart.getCartId());
+						session.setAttribute("User", user);
 						
 					}
 					catch(SQLException e) {
@@ -156,12 +163,7 @@ public class SignUpServlet extends HttpServlet {
 				merchantpst.setString(6, merchant.getJoinDate());	
 				
 				
-				
-//				session.setAttribute(ID, merchant.getMID());
-//				session.setAttribute(FirstName, merchant.getFirstName());
-//				session.setAttribute(LastName, merchant.getLastName());
-//				session.setAttribute(UserName, merchant.getUserName());
-//				session.setAttribute(UserPassword, merchant.getUserPassword());
+
 								
 				//Check if information is empty
 				if(merchant.getFirstName().isEmpty() || merchant.getLastName().isEmpty()
@@ -196,12 +198,14 @@ public class SignUpServlet extends HttpServlet {
 			} 
 			
 			//Determine if new account information is approved or not
-			if(approved == false) {
-				RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/createaccounterror.jsp");
-				dispatcher.forward(request, response);
-			}
+//			if(approved == false) {
+//				RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/createaccounterror.jsp");
+//				dispatcher.forward(request, response);
+//			}
+//			
 			
-			else if(approved == true) {
+			
+			 if(approved == true) {
 				if(UserType.equals("User")) {
 					response.sendRedirect("UserServlet");
 				}

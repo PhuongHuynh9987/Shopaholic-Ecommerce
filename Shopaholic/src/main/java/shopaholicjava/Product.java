@@ -8,7 +8,7 @@ public class Product {
 	
 	private String PID;
 	private String ProductName;
-	private String Price;
+	private Float Price;
 	private String ProductType;
 	private String Img;
 	private String ProductDescription;
@@ -30,11 +30,11 @@ public class Product {
 		ProductName = productName;
 	}
 	
-	public String getPrice() {
+	public Float getPrice() {
 		return Price;
 	}
 	
-	public void setPrice(String price) {
+	public void setPrice(Float price) {
 		Price = price;
 	}
 	

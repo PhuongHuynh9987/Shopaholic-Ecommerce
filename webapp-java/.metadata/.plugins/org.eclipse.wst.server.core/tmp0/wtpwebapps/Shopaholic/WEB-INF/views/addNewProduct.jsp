@@ -33,8 +33,11 @@
 				<input type="text" placeholder="Search..">
 			</div>
 			
-			<div class='signin'>
-				<a href="LogoutServlet"><button>Log Out</button></a>
+			<div>
+				<form action="LogoutServlet">
+					<input type = "hidden" name = "UserType" value = "Merchant">
+					<button type="submit" class='signout'>Sign Out</button>
+				</form>
 			</div>
 			
 			<div class='homepage'>
@@ -43,33 +46,62 @@
 		</div>
 		
 		<div>
-			<h1>Product Register Form</h1>
-	        <form action="MerchantServlet" method="post"  enctype = "multipart/form-data">
+			<h1>Adding a New Product</h1>
+	        <form action="MerchantServlet" method="post" name="Form"  enctype = "multipart/form-data" onsubmit="return validateForm()">
 	       		<input type="hidden" name="action" value="add">	
-				<table style="with: 80%">
+				<table>
 					<tr>
 						<td>Product Type</td>
-						<td><input type="text" name="productType" /></td>
+						<td><input type="text" name="productType" onkeypress="removeElert()"/></td>
 					</tr>
 					
 					<tr>
 						<td>Product Name</td>
-						<td><input type="text" name="productName" /></td>
+						<td><input type="text" name="productName" onkeypress="removeElert()"/></td>
 					</tr>
 					<tr>
 						<td>Price</td>
-						<td><input type="text" name="price" /></td>
+						<td><input type="text" name="price" onkeypress="removeElert()" /></td>
 					</tr>
 
 					<tr>
 						<td>Product Image</td>
-						<td><input type="file" name="imageFile"/>	</td>
+						<td><input type="file" name="imageFile" onkeypress="removeElert()"/></td>
 					</tr>
+
 				</table>
-				<input type="submit" value="Submit" />
+				<span class="emptyField">Please Fill In All Required Fields!</span>
+				<input type="submit" value="Submit" class ="addProduct" />
 			</form>
+			<div class = "footer">
+				<a href="MerchantServlet">Cancel</a>
+			</div>
 		</div>
 	</div>
+	
+	<script  type="text/javascript">
+	 	var emptyField = document.querySelector(".emptyField");
+	
+		function validateForm() {
+		    var a = document.forms["Form"]["productType"].value;
+		    var b = document.forms["Form"]["productName"].value;
+		    var c = document.forms["Form"]["price"].value;
+		    var d = document.forms["Form"]["imageFile"].value;
+		   
+		    if ((a == null || a == "") || (b == null || b == "") || (c == null || c == "") || (d == null || d == "")) {
+		    	emptyField.classList.add("active");	  
+		    	return false;
+		    }
+		    else {
+		    	return true;
+		    }
+		 }
+		
+		 function removeElert() {
+			emptyField.classList.remove("active");	
+		 }
+		
+	</script>
 
 
 </body>

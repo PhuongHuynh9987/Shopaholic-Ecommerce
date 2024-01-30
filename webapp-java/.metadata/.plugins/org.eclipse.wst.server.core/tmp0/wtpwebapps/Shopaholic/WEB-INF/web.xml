@@ -20,6 +20,7 @@ version="6.0"
   <welcome-file-list>
   	<welcome-file>index.html</welcome-file>
   	<welcome-file>login.jsp</welcome-file>
+  	<welcome-file>merchantlogin.jsp</welcome-file>
   	<welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
   <servlet>
@@ -121,6 +122,16 @@ version="6.0"
   <servlet-mapping>
     <servlet-name>EditProductServlet</servlet-name>
     <url-pattern>/EditProductServlet</url-pattern>
+  </servlet-mapping>
+    <servlet>
+    <description></description>
+    <display-name>UpdateProductServlet</display-name>
+    <servlet-name>UpdateProductServlet</servlet-name>
+    <servlet-class>servlets.UpdateProductServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>UpdateProductServlet</servlet-name>
+    <url-pattern>/UpdateProductServlet</url-pattern>
   </servlet-mapping>
   <servlet>
     <description></description>

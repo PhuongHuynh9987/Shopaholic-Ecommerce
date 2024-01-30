@@ -37,16 +37,20 @@ public class LogoutServlet extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-//		System.out.print("request");
-//		response.getWriter().append("Served at: ").append(request.getContextPath());
-//		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/userhomepage.jsp");
-//		dispatcher.forward(request, response);
-//		System.out.print("request");
-		
-		
 		HttpSession session  = request.getSession();
 		session.invalidate();
-		response.sendRedirect("login.jsp");
+		
+		String UserType= request.getParameter("UserType");
+		
+		if (UserType.equals("User")) {
+			response.sendRedirect("login.jsp");
+		}
+		else {
+			response.sendRedirect("merchantlogin.jsp");
+		}
+		
+		
+		
 	}
 
 }

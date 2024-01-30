@@ -36,62 +36,117 @@ public class AddToCartServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		addCartItem(request, response);
-		response.sendRedirect("UserServlet");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("userhomepage.jsp");
+		dispatcher.forward(request, response);		
 	}
 
+	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String addItem = (String)request.getParameter("action");
+		
+        
+		if(addItem.equals("AddToCart")) {
+			addCartItem(request, response);
+			response.sendRedirect("UserServlet");
+		}
+		
+		else {
+//			viewItems(request,response);
+			response.sendRedirect("EditCartServlet");
+		}
+
+		
+	}
+	
+	/**
+	 * @throws IOException 
+	 * @throws ServletException 
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	
+	
 	private void addCartItem(HttpServletRequest request, HttpServletResponse response) {
 		
-		String PID = request.getParameter("pid");
-		String ProductName = request.getParameter("productname");
-		String Price = request.getParameter("price");
-//		String CID = request.getParameter("CID");
+		String PID = request.getParameter("add");
 		String CID = (String) request.getSession().getAttribute("CID");
 		
-		
-		System.out.println((String) request.getSession().getAttribute("CID"));
-		System.out.println("CID from addtocart: " + CID);
-//    	System.out.println("PID from addtocart: " + PID);
-//    	System.out.println("ProductName from addtocart: " + ProductName);
-//    	System.out.println("Price from addtocart: " + Price);
+		// CHECK, INSERT INTO, AND UPDATE CART PRODUCTS
+		String getPrice = "Select * from Products Where PID = ?;";
+		String insertToCart = "INSERT INTO CartProducts (CID, PID,Quantity,TotalPrice, ProductName, ProductType, Img) VALUES(?,?,?,?,?,?,?);" ;
+    	String updateCart = "UPDATE CartProducts set Quantity = ? , TotalPrice = ? WHERE CID = ? AND PID = ? ";
+    	String checkItemQuantity = "Select * FROM CartProducts WHERE PID = ? and CID = ?;";
 
-    	//INSERT INTO CART PRODUCTS
-    	String selectQuery = "INSERT INTO CartProducts(CID, PID, ProductName) VALUES(?, ?, ?);";
+    
+    	
     	try (Connection conn = DatabaseConnection.getConnection();
-				PreparedStatement statement = conn.prepareStatement(selectQuery);) {
-			statement.setString(1, CID);
-			statement.setString(2, PID);
-			statement.setString(3, ProductName);
-            statement.executeUpdate();
-            
-            Product product = new Product();
-        	product.setPID(PID);
-        	product.setProductName(ProductName);
-        	product.setPrice(Price);
-//        	System.out.println(product.toString());
+			PreparedStatement insert = conn.prepareStatement(insertToCart);
+    		PreparedStatement check = conn.prepareStatement(checkItemQuantity);
+    		PreparedStatement update = conn.prepareStatement(updateCart);
+    		PreparedStatement priceCalculate = conn.prepareStatement(getPrice);) {
+
+    		check.setString(1, PID);
+    		check.setString(2, CID);
+    	
+    		//Check if the product has been inside the cart
+    		ResultSet check_rs = check.executeQuery();
+    		
+
+    		//Get the product price and information
+    		CartProduct cartProduct= new CartProduct();
+			priceCalculate.setString(1, PID);	
+    		ResultSet rs = priceCalculate.executeQuery();
+    		
+    		while(rs.next()) {
+    			String p = rs.getString("Price");
+    			Float price = Float.valueOf(p);
+    			String ProductName= rs.getString("ProductName");
+    			String ProductType= rs.getString("ProductType");
+    			String Img = rs.getString("Img");
+    			cartProduct.setPrice(price);
+    			cartProduct.setProductName(ProductName);
+    			cartProduct.setProductType(ProductType);
+    			cartProduct.setImg(Img);
+    		}
+    		rs.close();
+    		
+    		// If the product is inside the cart, update the quantity and price
+    		if (check_rs.next()) {
+				int quantity = check_rs.getInt("Quantity");
+				quantity = quantity + 1;
+				Float Total= (float) (cartProduct.getPrice() * quantity);
+
+				update.setInt(1, quantity);
+				update.setFloat(2, Total);
+				update.setString(3, CID);
+				update.setString(4, PID);
+				
+        		update.executeUpdate();
+        		check_rs.close();
+    		}
+    		
+    		// If the product is not yet inside the cart
+    		else {
+        		insert.setString(1, CID);
+        		insert.setString(2, PID);
+        		insert.setInt(3, 1);
+        		Float price = cartProduct.getPrice();
+     
+        		insert.setFloat(4, price);
+        		insert.setString(5, cartProduct.getProductName());
+        		insert.setString(6, cartProduct.getProductType());
+        		insert.setString(7, cartProduct.getImg());
+    			insert.executeUpdate();
+    			check_rs.close();
+    		}
     	}
     	catch (SQLException e) {
             e.printStackTrace();
         }
     	
-    	//DELETE PRODUCT INFO
-//    	try (Connection conn = DatabaseConnection.getConnection();){
-//			PreparedStatement pst = conn.prepareStatement("DELETE FROM Products WHERE PID =?");
-//			pst.setString(1, PID);
-//			pst.executeUpdate();
-//		}
-//		catch(Exception e) {
-//			e.printStackTrace();
-//		}
+
     }    
 	
-	
-	
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-//	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//		
-//	}
+
+
 
 }

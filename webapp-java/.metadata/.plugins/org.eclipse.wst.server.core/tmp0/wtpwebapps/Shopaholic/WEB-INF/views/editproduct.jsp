@@ -33,8 +33,11 @@
 				<input type="text" placeholder="Search..">
 			</div>
 			
-			<div class='signin'>
-				<a href="LogoutServlet"><button>Log Out</button></a>
+			<div>
+				<form action="LogoutServlet">
+					<input type = "hidden" name = "UserType" value = "Merchant">
+					<button type="submit" class='signout'>Sign Out</button>
+				</form>
 			</div>
 			
 			<div class='homepage'>
@@ -44,47 +47,84 @@
 		
 		<div>
 			<h1>Updating Product</h1>
-	        <form action="MerchantServlet" method="post"  enctype = "multipart/form-data">
-	       		<input type="hidden" name="action" value="update">	
-				<table style="with: 80%">
-					<tr>
-					<%
+			<%
 					String ProductName = (String)request.getAttribute("ProductName");
 					String ProductType = (String)request.getAttribute("ProductType");
-					String Price = (String)request.getAttribute("Price");
+					Float price = (Float)request.getAttribute("Price");
+					String Price = price.toString();
 					String Img = (String)request.getAttribute("Img");
-					System.out.println(ProductType);
+					String PID = (String)request.getAttribute("PID");
 					%>
-					
+	        <form action="MerchantServlet" method="post" name = "Form" enctype = "multipart/form-data" onsubmit="return validateForm()">
+	       		<input type="hidden" name="action" value = <%=PID%> >	
+				<table>
+					<tr>	
 						<td>Product Type</td>
-						<td><input type="text" name="productType" value = "<%=ProductType%>" /></td>
+						<td><input type="text" name="productType" id = "productType" value = "<%=ProductType%>" onkeypress="removeElert()"/></td>
 					</tr>
 					
 					<tr>
 						<td>Product Name</td>
-						<td><input type="text" name="productName" value = <%=ProductName%> /></td>
+						<td><input type="text" name="productName" id = "productName" value = <%=ProductName%> onkeypress="removeElert()" /></td>
 					</tr>
 					<tr>
 						<td>Price</td>
-						<td><input type="text" name="price" value = <%=Price%> /></td>
+						<td><input type="text" name="price"  id = "price"  value = <%=Price%> onkeypress="removeElert()" /></td>
 					</tr>
 	
 					 <tr>
 						<td>Old Image File Name</td>
-						<td><input type="text" name="price" value = <%=Img.replace("images/","") %>  /></td>
+						<td><input type="text" name="image" id = "image" value = <%=Img.replace("images/","") %>  onkeypress="removeElert()"/></td>
 					</tr>
 					
 					<tr>
 						<td>Product Image</td>
 						<td><input type="file" name="imageFile"/> </td>
 					</tr>
+					
 				</table>
-				<input type="submit" value="Update Product" />
-				<a class="signup-image-link"><button value = "Cancel">Cancel</button></a>
+				<span class="emptyField">Please Fill In All Required Fields!</span>
+				<input type="submit" value="Update Product" class= "addProduct"/>
 			</form>
+		
 		</div>
+		<div class = "footer">
+				<a href="MerchantServlet">Cancel</a>
+				
+				<form action="MerchantServlet" method="post">
+					<input type="hidden" name="action" value="Delete">
+					<button type="submit">Delete</button>
+				</form> 
+			</div>
 	</div>
-
+	
+	<script  type="text/javascript">
+	 	var emptyField = document.querySelector(".emptyField");
+	 	
+	 	console.log(productType);
+	 	
+		function validateForm() {
+			var a = document.getElementById("productType").value;
+			var b = document.getElementById("productName").value;
+			var c = document.getElementById("price").value;
+			var d = document.getElementById("image").value;
+		   
+		    
+		    if ((a == null || a == "") || (b == null || b == "") || (c == null || c == "") || (d == null || d == "")) {
+		    	emptyField.classList.add("active");	
+		    	
+		    	return false;
+		    }
+		    else {
+		    	return true;
+		    }
+		 }
+		
+		 function removeElert() {
+			emptyField.classList.remove("active");	
+		 }
+		
+	</script>
 
 </body>
 </html>

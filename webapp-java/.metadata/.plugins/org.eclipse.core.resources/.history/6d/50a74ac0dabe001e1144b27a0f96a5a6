@@ -1,0 +1,180 @@
+package servlets;
+import shopaholicjava.*;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+
+/**
+ * Servlet implementation class ProductServlet
+ */
+@MultipartConfig 
+//@WebServlet("/UpdateProductServlet")
+public class UpdateProductServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public UpdateProductServlet() {
+		super();
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+//		response.getWriter().append("Served at: ").append(request.getContextPath());
+
+//		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/editproduct.jsp");
+//		dispatcher.forward(request, response);
+		
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		String action = request.getParameter("action");
+        if (action.equals("Delete")) {
+        	delete(request, response);
+        }
+        	
+        else {
+        	update(request, response);
+        }
+        
+		
+		
+	}
+	
+	protected void delete (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String PID = (String)request.getSession().getAttribute("PID");
+		System.out.print(PID);
+		
+		try (Connection con = DatabaseConnection.getConnection();){		
+		  	String statement = "Delete From Products WHERE PID = ?; ";
+			PreparedStatement update = con.prepareStatement(statement);
+			
+	
+			update.setString(1, PID);
+			update.executeUpdate();
+			
+
+            // Load file into images folder
+            try {
+                FileOutputStream fos = new FileOutputStream(imagePath);
+                InputStream in = File.getInputStream();
+                
+                
+                byte[] data = new byte[in.available()];
+                in.read(data);
+                fos.write(data);
+                fos.flush();
+                fos.close();
+                
+                
+            }
+            catch (Exception e) {
+            	System.out.println(e);
+            	e.printStackTrace();
+            }
+            response.sendRedirect("MerchantServlet");
+	  	}
+	  	
+		catch(Exception e) {
+		e.printStackTrace();
+		}
+	}
+	
+
+
+
+		
+	protected void update (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		
+		String PID = (String)request.getSession().getAttribute("PID");
+	  	String productType = request.getParameter("productType");
+	  	String productName = request.getParameter("productName");
+	  	String price = request.getParameter("price");
+	  	
+	  	Part File =  request.getPart("imageFile");
+        String fileName = File.getSubmittedFileName();
+        String imagePath = "/Users/huynhphuong/Desktop/Java-Developer/Shopaholic/src/main/webapp/images/"+fileName;
+	  	
+//	  	String imageFile = request.getParameter("imageFile");
+
+	  	if (fileName.isEmpty()) {
+	  		fileName = request.getParameter("image");
+	  	}
+	  	fileName = "images/" + fileName;
+	  	
+	  	try (Connection con = DatabaseConnection.getConnection();){		
+		  	String statement = "Update Products SET ProductName = ?,ProductType = ?, Price = ?, Img = ? WHERE PID = ?; ";
+			PreparedStatement update = con.prepareStatement(statement);
+			
+			update.setString(1, productName);
+			update.setString(2, productType);
+			update.setString(3, price);
+			update.setString(4, fileName);
+			update.setString(5, PID);
+			update.executeUpdate();
+			
+
+            // Load file into images folder
+            try {
+                FileOutputStream fos = new FileOutputStream(imagePath);
+                InputStream in = File.getInputStream();
+                
+                
+                byte[] data = new byte[in.available()];
+                in.read(data);
+                fos.write(data);
+                fos.flush();
+                fos.close();
+                
+                
+            }
+            catch (Exception e) {
+            	System.out.println(e);
+            	e.printStackTrace();
+            }
+            response.sendRedirect("MerchantServlet");
+	  	}
+	  	
+		catch(Exception e) {
+		e.printStackTrace();
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

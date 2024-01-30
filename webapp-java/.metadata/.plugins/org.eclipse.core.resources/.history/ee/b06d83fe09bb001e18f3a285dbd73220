@@ -1,0 +1,61 @@
+package shopaholicjava;
+
+public class CartProduct {
+    private String CID;
+    private String UID;
+    private String PID;
+    private int Quantity;
+//    private int quantity;
+
+    public CartProduct() {
+    }
+
+    public CartProduct(String cartId, String userId, String productId) {
+        this.CID = cartId;
+        this.UID = userId;
+        this.UID = userId;
+        this.PID = productId;
+        this.Quantity = quantity;
+    }
+
+    public String getCartId() {
+        return CID;
+    }
+
+    public void setCartId(String cartId) {
+        this.CID = cartId;
+    }
+
+    public String getUserId() {
+        return UID;
+    }
+
+    public void setUserId(String userId) {
+        this.UID = userId;
+    }
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
+    }
+
+//    public int getQuantity() {
+//        return quantity;
+//    }
+//
+//    public void setQuantity(int quantity) {
+//        this.quantity = quantity;
+//    }
+
+    @Override
+    public String toString() {
+        return "Cart{" +
+                "cartId='" + CID + '\'' +
+                ", userId='" + UID + '\'' +
+                ", productId='" + productId + '\'' +
+                '}';
+    }
+}

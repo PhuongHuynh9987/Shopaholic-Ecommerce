@@ -1,0 +1,94 @@
+package servlets;
+import shopaholicjava.*;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
+
+/**
+ * Servlet implementation class EditProductServlet
+ */
+public class EditProductServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public EditProductServlet() {
+        super();
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/merchanthompage.jsp");
+		dispatcher.forward(request, response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { 
+		editProduct(request, response);
+ 
+	}
+	protected void editProduct(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	  	String PID = request.getParameter("action");
+
+		try (Connection con = DatabaseConnection.getConnection();){			
+			PreparedStatement query = con.prepareStatement("SELECT * FROM Products WHERE PID = ?;");
+			
+			ResultSet rs =null;
+			
+			query.setString(1,PID);
+			rs = query.executeQuery();	
+			
+			Product product = new Product();
+			if(rs.next()){
+    			String ProductName = rs.getString("ProductName");
+    			product.setProductName(ProductName);
+    			String ProductType = rs.getString("ProductType");
+    			product.setProductType(ProductType);
+    			String price = rs.getString("Price");
+    			Float Price = Float.valueOf(price);
+    			product.setPrice(Price);
+    			String Img = rs.getString("Img");
+    			product.setImg(Img);
+    			product.setPID(PID);
+			}
+			
+			HttpSession session = request.getSession(true);
+			
+			session.setAttribute("PID", PID);
+			request.setAttribute("PID", PID);	
+			request.setAttribute("ProductName", product.getProductName());
+			request.setAttribute("ProductType", product.getProductType());
+			request.setAttribute("Price", product.getPrice());
+			request.setAttribute("Img", product.getImg());
+			rs.close();
+		}
+		
+		catch(Exception e) {
+			System.out.println(e);
+			e.printStackTrace();
+		}
+
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/editproduct.jsp");
+		dispatcher.forward(request, response);
+	}
+
+
+}

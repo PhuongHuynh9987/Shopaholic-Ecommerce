@@ -1,0 +1,93 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<%@page import="java.sql.*"%>
+<%@ page import="java.util.*"%>
+<%@ page import="shopaholicjava.*"%>
+
+<head>
+<meta charset="UTF-8">
+<!-- Favicon -->
+<link rel = "icon" type = "image/x-icon" href = "asset/favicon.ico"/>
+<!-- Font Awesome icons (free version) -->
+<script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" crossorigin = "anonymous"></script>
+<!--Google fonts  -->
+<link href = "https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type = text/css />
+<!-- Core theme CSS (bootstrap) -->	
+<link href = "style.css" rel="stylesheet"/>
+<meta charset="ISO-8859-1">
+<title>User Home Page</title>
+</head>
+<body>
+	<div class='body'>
+	
+		<!------------ Nav Bar ------------>
+		<div class='navbar'>
+			<div class='logo'>
+				<img src="images/logo.png" alt="logo">
+			</div>
+			<div class='searchbar'>
+				<input type="text" placeholder="Search..">
+			</div>
+			
+			<div>
+				<form action="LogoutServlet">
+					<input type = "hidden" name = "UserType" value = "User">
+					<button type="submit" class='signout'>Sign Out</button>
+				</form>
+			</div>
+			
+			<div >
+	 			<form action="EditCartServlet" method="post"> 
+				<%	String CID = (String) request.getSession().getAttribute("CID");
+				
+				%>
+					<input type="hidden" name="action" value=<%=CID%> >
+					<button type="submit" class='cart' ><i class="fas fa-shopping-cart"></i></button>
+				</form>	  
+			</div>
+			<h3><%=session.getAttribute("UserName")%></h3>
+		</div>
+		
+		
+		<!--------- Main Content --------->
+		<div class = 'product-area'>				
+			<%ArrayList<Product> products = (ArrayList<Product>) request.getAttribute("productdata");
+			  Iterator<Product> items = products.iterator();
+			  
+			  while (items.hasNext()){
+				  Product item = items.next(); %>
+				<div class='product'>
+					<div class = product-top>
+						<img alt="" src= "<%=item.getImg()%>" >
+						 <h4><%=item.getProductName()%></h4>
+					</div>
+					<hr>
+					<div class = product-bottom>
+						<div>
+							<form action="AddToCartServlet" method="post">
+								<input type="hidden" name="action" value= "AddToCart">
+								<button type="submit" name="add" value = <%=item.getPID()%> >Add to Cart</button>
+							</form>
+							<%-- 
+							 <form action="" method="post">
+							 	<input type="hidden" name="action" value=<%=item.getPID()%>> 
+								<button type="submit">View</button>
+							</form>  --%>
+		
+						</div>
+						 <h3>$<%=item.getPrice()%></h3>
+					</div>
+				</div> 
+			<%}%>
+			</div>		
+					
+	
+	<!-- 		<h3>
+				<a href="ReviewServlet">Go to Reviews</a>
+			</h3>  -->
+		
+	</div>
+</body>
+</html>

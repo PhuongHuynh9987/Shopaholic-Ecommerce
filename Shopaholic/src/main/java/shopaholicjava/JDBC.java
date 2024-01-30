@@ -70,7 +70,9 @@ public class JDBC {
 	  PreparedStatement preparedStatement = con.prepareStatement(INSERT_PRODUCTS_SQL)) {
 	  preparedStatement.setString(1, product.getPID());
 	  preparedStatement.setString(2, product.getProductName());
-	  preparedStatement.setString(3, product.getPrice());
+	  Float price = product.getPrice();
+	  String Price = price.toString();
+	  preparedStatement.setString(3, Price);
 	  System.out.println(preparedStatement);
 	  
 	  // Step 3: Execute the query or update query
