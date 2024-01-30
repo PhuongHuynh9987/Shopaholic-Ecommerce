@@ -13,6 +13,9 @@ The original project report can be found at https://phuonghuynh9987.github.io/po
 #### 1. Download and Install
   - Eclipse IDE
   - Tomcat Server
+  - MySQL
+  - MySQL workbench (or any other tools to work with SQL databases)
+
 #### 2. Project uses (can be found in lib file)
   - Mysql-connector-java
   - javax servlet-api
