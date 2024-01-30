@@ -9,7 +9,14 @@ This repository showcases continuous improvements made to a project originating 
 
 ### Getting started
 
-#### 1. Set up
+#### 1. Download and Install
+  - Eclipse IDE
+  - Tomcat Server
+#### 2. Project uses (can be found in lib file)
+  - Mysql-connector-java
+  - javax servlet-api
 
-Eclipse
-
+#### 3. Steps:
+  - Clone this repository
+  - Start Eclips
+  - Copy all file to the Java environment
