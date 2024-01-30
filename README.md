@@ -12,7 +12,7 @@ The original project report can be found at https://phuonghuynh9987.github.io/po
 
 #### 1. Download and Install
   - Eclipse IDE
-  - Tomcat Server
+  - Tomcat Server (or from the repo)
   - MySQL
   - MySQL workbench (or any other tools to work with SQL databases)
 
@@ -23,4 +23,4 @@ The original project report can be found at https://phuonghuynh9987.github.io/po
 #### 3. Steps:
   - Clone this repository
   - Start Eclips
-  - Copy all file to the Java environment
+  - Copy all files to the Java environment
