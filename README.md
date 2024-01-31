@@ -10,7 +10,10 @@ The original project report can be found at ![link](https://phuonghuynh9987.gith
 
 
 ## Schema
-![diagram](https://github.com/PhuongHuynh9987/Shopaholic-Ecommerce/assets/54336313/d6db49b6-841f-4a81-a194-9757bbbb6e0f  {width=40px height=400px})
+![diagram](  {width=40px height=400px})
+
+<img src="[https://github.com/favicon.ico](https://github.com/PhuongHuynh9987/Shopaholic-Ecommerce/assets/54336313/d6db49b6-841f-4a81-a194-9757bbbb6e0f)" width="48">
+
 
 ## Getting started
 
