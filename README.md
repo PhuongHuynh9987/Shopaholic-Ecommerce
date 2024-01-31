@@ -2,7 +2,7 @@
 
 
 This repository showcases continuous improvements made to a project originating from an Intro to Database Management Course. The project emphasizes applying database concepts and establishing connections between the front-end and back-end of a website, with a heightened focus on user interface (UI).
-The original project report can be found at ![url](https://phuonghuynh9987.github.io/portfolio/Final-report-CS-157A.pdf)
+The original project report can be found at [here](https://phuonghuynh9987.github.io/portfolio/Final-report-CS-157A.pdf)
 
 
 
