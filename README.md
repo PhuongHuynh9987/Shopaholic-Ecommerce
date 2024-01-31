@@ -2,7 +2,7 @@
 
 
 This repository showcases continuous improvements made to a project originating from an Intro to Database Management Course. The project emphasizes applying database concepts and establishing connections between the front-end and back-end of a website, with a heightened focus on user interface (UI).
-The original project report can be found at ![link](https://phuonghuynh9987.github.io/portfolio/Final-report-CS-157A.pdf). 
+The original project report can be found at ![url](https://phuonghuynh9987.github.io/portfolio/Final-report-CS-157A.pdf)
 
 
 
@@ -10,9 +10,8 @@ The original project report can be found at ![link](https://phuonghuynh9987.gith
 
 
 ## Schema
-![diagram](  {width=40px height=400px})
 
-<img src="[https://github.com/favicon.ico](https://github.com/PhuongHuynh9987/Shopaholic-Ecommerce/assets/54336313/d6db49b6-841f-4a81-a194-9757bbbb6e0f)" width="48">
+![diagram](https://github.com/PhuongHuynh9987/Shopaholic-Ecommerce/assets/54336313/7d54b71e-6a25-4e8d-a692-0c6b611e25ec | width=100)
 
 
 ## Getting started
