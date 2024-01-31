@@ -2,11 +2,15 @@
 
 
 This repository showcases continuous improvements made to a project originating from an Intro to Database Management Course. The project emphasizes applying database concepts and establishing connections between the front-end and back-end of a website, with a heightened focus on user interface (UI).
-The original project report can be found at https://phuonghuynh9987.github.io/portfolio/Final-report-CS-157A.pdf. 
+The original project report can be found at ![link](https://phuonghuynh9987.github.io/portfolio/Final-report-CS-157A.pdf). 
 
 
 
 ## Project Demo
+
+
+## Schema
+![diagram](https://github.com/PhuongHuynh9987/Shopaholic-Ecommerce/assets/54336313/d6db49b6-841f-4a81-a194-9757bbbb6e0f)
 
 ## Getting started
 
@@ -25,3 +29,4 @@ The original project report can be found at https://phuonghuynh9987.github.io/po
   - Start Eclipse and create a new project environment
   - Copy all files to the environment
   - In the MerchantServlet, modify the file directory into your own images file directory for the uploaded photos to be written into
+  - After connecting MySQL, import the my_sql.sql file to create tables
