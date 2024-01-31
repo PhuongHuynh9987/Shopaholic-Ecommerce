@@ -35,4 +35,4 @@ The original project report can be found at [here](https://phuonghuynh9987.githu
   - In the MerchantServlet, modify the file directory into your own images file directory for the uploaded photos to be written into
   - After connecting MySQL, import the my_sql.sql file to create tables
 
-##### Note: after upload a photo, refresh the eclipse! 
+##### Note: after upload a photo, refresh the eclipse then reload page! 
