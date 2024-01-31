@@ -11,8 +11,9 @@ The original project report can be found at [here](https://phuonghuynh9987.githu
 
 ## Schema
 
-![diagram](https://github.com/PhuongHuynh9987/Shopaholic-Ecommerce/assets/54336313/7d54b71e-6a25-4e8d-a692-0c6b611e25ec | width=100)
+![diagram](https://github.com/PhuongHuynh9987/Shopaholic-Ecommerce/assets/54336313/7d54b71e-6a25-4e8d-a692-0c6b611e25ec)
 
+<img src="/" width="200" />
 
 ## Getting started
 
