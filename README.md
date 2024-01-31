@@ -7,7 +7,7 @@ The original project report can be found at [here](https://phuonghuynh9987.githu
 
 
 ## Project Demo
-
+<img width="500" alt="Screen Shot 2024-01-31 at 12 07 14 PM" src="https://github.com/PhuongHuynh9987/Shopaholic-Ecommerce/assets/54336313/e04d2d27-bab5-40c4-9bec-bfd5b72e0069">
 
 ## Schema
 
